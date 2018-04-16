@@ -1,0 +1,1 @@
+{"version":3,"file":"ChatEvent.js","sourceRoot":"","sources":["../../../../src/view/chat/event/ChatEvent.ts"],"names":[],"mappings":";;;;;;;;;;AAAA;IAAwB,6BAAW;IAE/B,mBAAY,IAAW,EAAE,OAAoB,EAAE,UAAwB;QAA9C,wBAAA,EAAA,cAAoB;QAAE,2BAAA,EAAA,kBAAwB;eACnE,kBAAM,IAAI,EAAE,OAAO,EAAE,UAAU,CAAC;IACpC,CAAC;IAUL,gBAAC;AAAD,CAAC,AAdD,CAAwB,KAAK,CAAC,KAAK,GAclC;AAdK,UAAA,SAAS,wBAcd,CAAA"}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ChatOutputSkin" width="400" height="300" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Image source="output_bg_png" scale9Grid="6,6,18,18" x="0" y="0" width="100%" height="100%"/>
+	<e:Scroller id="ScrollerBox" bottom="10" top="10" right="10" left="10" anchorOffsetX="0" anchorOffsetY="0">
+		<e:Group id="ScrollViewport" left="0" right="0" top="0" bottom="0">
+			<e:Group id="GroupOutput" anchorOffsetX="0" anchorOffsetY="0" width="100%"/>
+		</e:Group>
+	</e:Scroller>
+</e:Skin>

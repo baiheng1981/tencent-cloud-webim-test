@@ -1,0 +1,1 @@
+{"version":3,"file":"MsgItem.js","sourceRoot":"","sources":["../../../../src/view/chat/item/MsgItem.ts"],"names":[],"mappings":";;;AAAA;IAMI,iBAAY,KAAY,EAAE,KAAY,EAAE,MAAgB;QAAhB,uBAAA,EAAA,UAAe,CAAC;QACpD,IAAI,CAAC,IAAI,GAAG,KAAK,CAAC;QAClB,IAAI,CAAC,IAAI,GAAG,KAAK,CAAC;QAClB,IAAI,CAAC,KAAK,GAAG,MAAM,CAAC;IACxB,CAAC;IAEL,cAAC;AAAD,CAAC,AAZD,IAYC;AAZK,UAAA,OAAO,sBAYZ,CAAA"}

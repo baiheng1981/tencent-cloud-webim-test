@@ -1,0 +1,6 @@
+{
+    "name": "webim",
+    "version": "0.1",
+    "compilerVersion": "5.1.8",
+    "typings": "typings/webim.d.ts"
+}

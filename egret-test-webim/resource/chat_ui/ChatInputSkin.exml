@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="ChatInputSkin" width="400" height="50" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Image source="output_bg_png" scale9Grid="6,6,18,18" left="0" right="75" top="0" bottom="0"/>
+	<e:Button id="BtnSend" label="Send" anchorOffsetX="0" width="70" anchorOffsetY="0" height="50" right="0" verticalCenter="0" skinName="CustomButtonSkin"/>
+	<e:Image id="EmojiBtn" source="input_emojis_png" verticalCenter="0.5" right="88"/>
+</e:Skin>

@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+        "target": "es5",
+        "allowJs": true,
+		"noImplicitAny": false,
+		"sourceMap": false,
+		"outFile": "bin/webim.js"
+	},
+	"include": [
+        "src"
+	]
+}

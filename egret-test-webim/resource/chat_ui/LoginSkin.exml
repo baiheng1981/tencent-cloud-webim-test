@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="LoginSkin" width="400" height="240" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect left="0" right="0" top="0" bottom="0" ellipseWidth="10" ellipseHeight="10" fillColor="0xefefef"/>
+	<e:Label text="Welcome" horizontalCenter="0" top="18" size="40" textColor="0x128478" bold="true"/>
+	<e:Button id="btnLogin" label="Login" horizontalCenter="0" skinName="CustomButtonSkin" height="40" bottom="20"/>
+	<e:Group id="userNameC" width="300" height="72" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="0" verticalCenter="0">
+		<e:Label text="username:" textColor="0x848484" horizontalCenter="0" size="26" scaleX="1" scaleY="1" left="0" right="0" top="0"/>
+		<e:Image id="bgUserName" source="output_txt_bg0_png" scale9Grid="7,7,16,16" anchorOffsetX="0" horizontalCenter="0" height="40" left="0" right="0" bottom="0"/>
+	</e:Group>
+</e:Skin>
