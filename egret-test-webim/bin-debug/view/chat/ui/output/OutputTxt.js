@@ -24,12 +24,24 @@ var OutputTxt = (function (_super) {
     OutputTxt.prototype.addStage = function (e) {
     };
     OutputTxt.prototype.init = function () {
-        if (this.msgItem.isSend) {
-            this.update1();
+        if (this.msgItem.type == QWebImType.ROOM_ENTER) {
+            this.updateSys();
         }
-        else {
-            this.update0();
+        else if (this.msgItem.type == QWebImType.MEMBER_CHAT) {
+            if (this.msgItem.isSend) {
+                this.update1();
+            }
+            else {
+                this.update0();
+            }
         }
+    };
+    OutputTxt.prototype.updateSys = function () {
+        this.skin = new OutputTxtSys(this.msgItem);
+        this.addChild(this.skin);
+        this.skin.x = 10;
+        this.skin.y = 0;
+        this.height = this.skin.height;
     };
     OutputTxt.prototype.update0 = function () {
         this.skin = new OutputTxt0(this.msgItem);

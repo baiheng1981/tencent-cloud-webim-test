@@ -12,10 +12,10 @@
 		"libs/modules/webim/webim.js"
 	],
 	"game": [
-		"bin-debug/base/BaseEuiComponent.js",
 		"bin-debug/serve/ui/ComponentBase.js",
+		"bin-debug/base/BaseEuiComponent.js",
 		"bin-debug/serve/ui/OutputBase.js",
-		"bin-debug/serve/qcloud/QWebImType.js",
+		"bin-debug/Platform.js",
 		"bin-debug/ThemeAdapter.js",
 		"bin-debug/base/BaseDisplayC.js",
 		"bin-debug/AssetAdapter.js",
@@ -26,10 +26,10 @@
 		"bin-debug/serve/http/HttpRequest.js",
 		"bin-debug/serve/qcloud/QWebIm.js",
 		"bin-debug/serve/qcloud/QWebImEvent.js",
+		"bin-debug/serve/qcloud/QWebImType.js",
 		"bin-debug/LoadingUI.js",
-		"bin-debug/Main.js",
 		"bin-debug/serve/ui/GroupBase.js",
-		"bin-debug/Platform.js",
+		"bin-debug/Main.js",
 		"bin-debug/view/Scene.js",
 		"bin-debug/view/chat/ChatContainer.js",
 		"bin-debug/view/chat/ChatScene.js",
@@ -40,6 +40,7 @@
 		"bin-debug/view/chat/ui/output/OutputTxt.js",
 		"bin-debug/view/chat/ui/output/OutputTxt0.js",
 		"bin-debug/view/chat/ui/output/OutputTxt1.js",
+		"bin-debug/view/chat/ui/output/OutputTxtSys.js",
 		"bin-debug/view/login/Login.js"
 	]
 }

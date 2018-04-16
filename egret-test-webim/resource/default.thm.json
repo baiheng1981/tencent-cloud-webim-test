@@ -21,6 +21,7 @@
 		"resource/chat_ui/ChatOutputSkin.exml",
 		"resource/chat_ui/ChatOutputTxt0Skin.exml",
 		"resource/chat_ui/ChatOutputTxt1Skin.exml",
+		"resource/chat_ui/ChatOutputTxtSysSkin.exml",
 		"resource/chat_ui/ChatTextInputSkin.exml",
 		"resource/chat_ui/LoginSkin.exml",
 		"resource/eui_skins/ButtonSkin.exml",

@@ -41,6 +41,7 @@ class ChatOutput extends eui.Component implements eui.UIComponent {
             let _el:QWebImItem = _els[i];
             let _msgItem:MsgItem = new MsgItem(_el.data.text, _el.fromAccountNick);
             _msgItem.isSend = _el.isSend;
+            _msgItem.type = _el.data.type;
             _itemlist.push(_msgItem);
         }
         this.update(_itemlist);

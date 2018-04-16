@@ -79,7 +79,7 @@ var Login = (function (_super) {
     Login.prototype.applyJoinBigGroup = function (e) {
         var _msg = {
             text: QWebIm.i().loginInfo.identifierNick + " join~!",
-            type: QWebImType.MEMBER_CHAT,
+            type: QWebImType.ROOM_ENTER,
             xxoo: "xxxxxxooooo"
         };
         QWebIm.i().onSendMsg(_msg);

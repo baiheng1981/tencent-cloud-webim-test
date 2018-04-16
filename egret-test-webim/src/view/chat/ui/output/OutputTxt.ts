@@ -17,11 +17,23 @@ class OutputTxt extends eui.Group {
     }
 
     private init(): void {
-        if (this.msgItem.isSend) {
-            this.update1();
-        } else {
-            this.update0();
+        if (this.msgItem.type == QWebImType.ROOM_ENTER) {
+            this.updateSys();
+        } else if (this.msgItem.type == QWebImType.MEMBER_CHAT){
+            if (this.msgItem.isSend) {
+                this.update1();
+            } else {
+                this.update0();
+            }
         }
+    }
+
+    private updateSys(): void {
+        this.skin = new OutputTxtSys(this.msgItem);
+        this.addChild(this.skin);
+        this.skin.x = 10;
+        this.skin.y = 0;
+        this.height = this.skin.height;
     }
 
     private update0(): void {

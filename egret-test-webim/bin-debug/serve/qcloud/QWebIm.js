@@ -119,6 +119,30 @@ var QWebIm = (function (_super) {
             }
         });
     };
+    /** 退出大群 */
+    QWebIm.prototype.quitBigGroup = function () {
+        var _this = this;
+        var options = {
+            'GroupId': this.avChatRoomId //群id
+        };
+        webim.quitBigGroup(options, function (resp) {
+            webim.Log.info('退群成功');
+            _this.logout();
+        }, function (err) {
+            console.log(err);
+        });
+    };
+    /** 登出 */
+    QWebIm.prototype.logout = function () {
+        var _this = this;
+        webim.logout(function (resp) {
+            webim.Log.info('登出成功');
+            _this.loginInfo.identifier = null;
+            _this.loginInfo.userSig = null;
+        }, function (err) {
+            console.log(err);
+        });
+    };
     /** 发送消息(普通消息)
      * msgData: {
      *              data:{},
@@ -159,30 +183,6 @@ var QWebIm = (function (_super) {
             console.log("发消息失败:", err);
             // webim.Log.error("发消息失败:" + err.ErrorInfo);
             return cbErr && cbErr(err);
-        });
-    };
-    /** 退出大群 */
-    QWebIm.prototype.quitBigGroup = function () {
-        var _this = this;
-        var options = {
-            'GroupId': this.avChatRoomId //群id
-        };
-        webim.quitBigGroup(options, function (resp) {
-            webim.Log.info('退群成功');
-            _this.logout();
-        }, function (err) {
-            console.log(err);
-        });
-    };
-    /** 登出 */
-    QWebIm.prototype.logout = function () {
-        var _this = this;
-        webim.logout(function (resp) {
-            webim.Log.info('登出成功');
-            _this.loginInfo.identifier = null;
-            _this.loginInfo.userSig = null;
-        }, function (err) {
-            console.log(err);
         });
     };
     /** 登录 end **********************************************************************************/

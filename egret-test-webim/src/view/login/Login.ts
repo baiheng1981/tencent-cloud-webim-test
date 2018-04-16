@@ -83,7 +83,7 @@ class Login extends ComponentBase {
     private applyJoinBigGroup(e:QWebImEvent): void {
         let _msg = {
             text: QWebIm.i().loginInfo.identifierNick + " join~!",
-            type: QWebImType.MEMBER_CHAT,
+            type: QWebImType.ROOM_ENTER,
             xxoo: "xxxxxxooooo"
         }
         QWebIm.i().onSendMsg(_msg);

@@ -42,6 +42,7 @@ var ChatOutput = (function (_super) {
             var _el = _els[i];
             var _msgItem = new MsgItem(_el.data.text, _el.fromAccountNick);
             _msgItem.isSend = _el.isSend;
+            _msgItem.type = _el.data.type;
             _itemlist.push(_msgItem);
         }
         this.update(_itemlist);
