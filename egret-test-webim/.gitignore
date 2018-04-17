@@ -1,5 +1,6 @@
-/node_modules/
-/bin_dev/
+node_modules/
+bin_dev/
+bin-debug/
 /.git/
 /build/
 .vscode
