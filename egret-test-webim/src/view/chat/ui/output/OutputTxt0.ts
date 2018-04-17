@@ -33,7 +33,11 @@ class OutputTxt0 extends OutputBase {
         this.item = _item;
 
         this.txt.width = 1000;
-        this.txt.text = "[" + this.item.role + "] " +this.item.text;
+        // this.txt.text = "[" + this.item.role + "] " +this.item.text;
+        this.txt.textFlow = <Array<egret.ITextElement>>[
+            {text:"[" + this.item.role + "] ", style:{"textColor": 0x156877}},
+            {text:this.item.text}
+        ]
 
         this.layout();
     }

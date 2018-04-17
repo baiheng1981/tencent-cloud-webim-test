@@ -1,3 +1,9 @@
+/** 云通信webim
+ *  class QWebImItem 接收数据
+ *  interface IQWebImData发送数据
+ *
+ *  init 初始化QWebIm
+ */
 class QWebIm extends egret.EventDispatcher {
     private static _instance:QWebIm;
     public static i():QWebIm {
@@ -53,6 +59,10 @@ class QWebIm extends egret.EventDispatcher {
         "onProfileSystemNotifys": this.onProfileModifyNotify.bind(this) //监听资料系统（自己或好友）通知事件，选填
     };
 
+    /**
+     * _avChatRoomId:string 聊天组id
+     * _loginInfo:webim.LoginInfo 用户注册信息
+     */
     public init(_avChatRoomId:string, _loginInfo:webim.LoginInfo ): void {
         console.log("webim init:", _avChatRoomId, _loginInfo);
 
@@ -150,13 +160,9 @@ class QWebIm extends egret.EventDispatcher {
     }
 
     /** 发送消息(普通消息)
-     * msgData: {
-     *              data:{},
-                    desc:"",
-                    ext:""
-                }
+     *  sdfsdf
      */
-    public onSendMsg(msgData:IQWebImData, cbOk?, cbErr?) {
+    public onSendMsg(imMsg:IQWebImMsg, cbOk?, cbErr?) {
         if (!this.loginInfo.identifier) { //未登录
             if (this.accountMode == 0) { //独立模式
                 this.sdkLogin();
@@ -176,10 +182,10 @@ class QWebIm extends egret.EventDispatcher {
         } else {
             subType = webim.C2C_MSG_SUB_TYPE.COMMON;
         }
-        console.log("发送消息：", subType)
+        console.log("发送消息：", imMsg)
         let msg = new webim.Msg(this.selSess, isSend, seq, random, msgTime, this.loginInfo.identifier, subType, this.loginInfo.identifierNick);
 
-        let customObj = new webim.Msg.Elem.Custom(JSON.stringify(msgData), "", "")
+        let customObj = new webim.Msg.Elem.Custom(JSON.stringify(imMsg), "", "");
         msg.addCustom(customObj);
         webim.sendMsg(msg, function (resp) {
             console.log("发消息成功:", resp);
@@ -249,8 +255,8 @@ class QWebIm extends egret.EventDispatcher {
         ime.msgList = this.parseMsg(msg);
         this.dispatchEvent(ime);
     }
-    public parseMsg(msg:webim.Msg):QWebImItem[] {
-        let _itemlist:QWebImItem[] = [];
+    public parseMsg(msg:webim.Msg):QWebImMsg[] {
+        let _itemlist:QWebImMsg[] = [];
         let _els = msg.getElems();
         for (let i=0; i<_els.length; i++) {
             let _el:webim.Msg.Elem = _els[i];
@@ -258,12 +264,14 @@ class QWebIm extends egret.EventDispatcher {
             let content = _el.getContent();//获取元素对象
             // console.log(_el);
             if (type == webim.MSG_ELEMENT_TYPE.CUSTOM) {
-                let data:IQWebImData = JSON.parse(content.getData());
-                let _item:QWebImItem = new QWebImItem(data);
-                _item.fromAccount = msg.getFromAccount();
-                _item.fromAccountNick = msg.getFromAccountNick();
+                let data:IQWebImMsg = JSON.parse(content.getData());
+                data.sendTime = msg.getTime();
+                let _item:QWebImMsg = new QWebImMsg(data);
+                // _item.sender.userId = Number(msg.getFromAccount());
+                // _item.sender.nickname = msg.getFromAccountNick();
+                // _item.sendTime = msg.getTime();
+                // _item.client = data.client;
                 _item.isSend = msg.getIsSend();
-                _item.time = msg.getTime();
                 _itemlist.push(_item);
             }
         }
@@ -311,23 +319,107 @@ class QWebIm extends egret.EventDispatcher {
 }
 
 /**
- * 接收数据
+ * 消息结构
  */
-class QWebImItem {
-    public data:IQWebImData;
-    public fromAccount:string;
-    public fromAccountNick:string;
-    public isSend:boolean;
-    public time:number;
+class QWebImMsg implements IQWebImMsg {
+    public sender:IQwebImSender = {
+            userId: "",
+            nickname: "",
+            gender: 0,
+            portrait: "",
+            level: 0
+        };
+    public action:string = "";           // 触发该IM消息的动作:http://wiki.oa.okchang.com/doku.php?id=haochang_chunk:im
+    public client:string = "web";           // 枚举类型, 当前支持如下枚举类型: android ios server web
+    public roomId:number = 0;           // 平台房间Id
+    public sendTime:number = 0;         // client 发送消息时间, 单位毫秒
+    public minIMVersion:number = 0;     // IM最小兼容版本
+    public content:Object;          // 消息内容, hash结构
 
-    public constructor(_data:IQWebImData) {
-        this.data = _data;
+    public isSend:boolean;
+
+    public constructor(_data?:IQWebImMsg) {
+        this.update(_data);
     }
+
+    public update(_data:IQWebImMsg): void {
+        if (_data) {
+            this.sender = _data.sender;
+            this.action = _data.action;
+            this.client = _data.client || "web";
+            this.roomId = _data.roomId || 0;
+            this.sendTime = _data.sendTime || 0;
+            this.minIMVersion = _data.minIMVersion || 0;
+            this.content = _data.content || null;
+        }
+    }
+
 }
-/**
- * 发送数据
+
+
+interface IQWebImMsg {
+    sender:IQwebImSender;
+    action: string;
+    client?:string;
+    roomId?:number;
+    sendTime?:number;
+    minIMVersion?:number;
+    content?:Object;
+}
+/** 发送人
+ * 如果服务器发送的IM消息是以用户名义发送，那么sender就包含该用户的信息
+ * 如果服务器发送的系统消息(没有用户触发），该结构也会存在，只是每个字段的值都为空。
  */
-interface IQWebImData {
-    text?:string,
-    type:string //QWebImType
+interface IQwebImSender {
+    userId?: string;             // 用户id
+    nickname?: string;           // 用户名
+    gender?: number;             // 性别 0:未知 1:男 2:女
+    portrait?: string;           // 头像
+    level?: number;              // 用户等级
+}
+
+class QWebImType {
+    /** 进入房间 */
+    public static ROOM_ENTER:string = "ROOM_ENTER";
+    /** 退出房间 */
+    public static ROOM_QUIT:string = "ROOM_QUIT";
+    /** 聊天 */
+    public static MEMBER_CHAT:string = "MEMBER_CHAT";
+    /** 私聊 */
+    public static CHAT_PRIVATE:string = "CHAT_PRIVATE";
+
+    /** 开始游戏 */
+    public static GAME_START: string = "GAME_START";
+    /** 结束游戏 */
+	public static GAME_FINISHED: string = "GAME_FINISHED";
+    /** 加入语音席 */
+	public static SEATS_JOIN: string = "SEATS_JOIN";
+    /** 离开语音席 */
+	public static SEATS_LEAVE: string = "SEATS_LEAVE";
+}
+
+
+class QWebImEvent extends egret.Event {
+    constructor(type:string, bubbles:boolean=false, cancelable:boolean=false) {
+        super(type, bubbles, cancelable);
+    }
+
+    public msgList:QWebImMsg[];
+    public msg:QWebImMsg;
+
+    public str:string; //群组系统消息
+
+
+    /** 收到新消息 */
+    public static ADDMSGGROUPEVENT:string = "addMsgGroupEvent";
+    /** 私聊消息 */
+    public static ADDMSGPRIVATEEVENT:string = "addMsgPrivateEvent";
+
+
+    /** 加入大群成功 */
+    public static APPLYJOINBIGGROUPEVENT:string = "applyJoinBigGroupEvent";
+
+    /** 群组系统消息 */
+    public static SHOWGROUPSYSTEMMSGEVENT:string = "showGroupSystemMsgEvent";
+
 }

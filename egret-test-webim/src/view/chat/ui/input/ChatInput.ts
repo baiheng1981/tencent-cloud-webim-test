@@ -56,9 +56,15 @@ class ChatInput extends ComponentBase {
             return;
         }
 
-        let _msg = {
-            text: _text,
-            type: QWebImType.MEMBER_CHAT
+        let _msg:IQWebImMsg = {
+            sender: {
+                userId: QWebIm.i().loginInfo.identifier,
+                nickname: QWebIm.i().loginInfo.identifierNick
+            },
+            action: QWebImType.MEMBER_CHAT,
+            content: {
+                text: _text
+            }
         }
         QWebIm.i().onSendMsg(_msg);
 

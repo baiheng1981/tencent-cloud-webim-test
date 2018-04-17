@@ -31,17 +31,18 @@ class ChatOutput extends eui.Component implements eui.UIComponent {
         this.nextY = this.disY;
 
         this.ScrollerBox.scrollPolicyH = eui.ScrollPolicy.OFF;
+        this.ScrollerBox.width = this.width;
+        this.ScrollerBox.height = this.height;
         QWebIm.i().addEventListener(QWebImEvent.ADDMSGGROUPEVENT, this.addMsgGroup, this);
     }
 
     private addMsgGroup(e:QWebImEvent): void {
         let _itemlist:MsgItem[] = [];
-        let _els:QWebImItem[] = e.msgList;
+        let _els = e.msgList;
         for (let i=0; i<_els.length; i++) {
-            let _el:QWebImItem = _els[i];
-            let _msgItem:MsgItem = new MsgItem(_el.data.text, _el.fromAccountNick);
+            let _el:QWebImMsg = _els[i];
+            let _msgItem:MsgItem = new MsgItem(_el);
             _msgItem.isSend = _el.isSend;
-            _msgItem.type = _el.data.type;
             _itemlist.push(_msgItem);
         }
         this.update(_itemlist);
@@ -74,8 +75,23 @@ class ChatOutput extends eui.Component implements eui.UIComponent {
     }
 
     private viewportRender(e:egret.Event): void {
-        if (this.ScrollerBox.viewport.scrollV < (this.ScrollerBox.viewport.contentHeight - this.ScrollerBox.viewport.height)) {
-            this.ScrollerBox.viewport.scrollV = this.ScrollerBox.viewport.contentHeight - this.ScrollerBox.viewport.height;
+        if (this.ScrollerBox.viewport.width < this.width) {
+            this.ScrollerBox.viewport.width = this.width;
         }
+        if (this.ScrollerBox.viewport.height < this.height) {
+            this.ScrollerBox.viewport.height = this.height;
+        }
+
+        this.ScrollerBox.validateNow();
+        let _sv = this.ScrollerBox.viewport.contentHeight - this.ScrollerBox.viewport.height;
+        if (_sv < 0) _sv = 0;
+        // this.ScrollerBox.viewport.scrollV = _sv;
+        egret.Tween.get(this.ScrollerBox.viewport).to({scrollV: _sv}, 300);
+
+        console.log("viewportRender:", _sv)
+
+        // if (this.ScrollerBox.viewport.scrollV < (this.ScrollerBox.viewport.contentHeight - this.ScrollerBox.viewport.height)) {
+        //     this.ScrollerBox.viewport.scrollV = this.ScrollerBox.viewport.contentHeight - this.ScrollerBox.viewport.height;
+        // }
     }
 }
