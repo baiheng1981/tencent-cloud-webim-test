@@ -74,7 +74,7 @@ class Login extends ComponentBase {
                 accountType: _res.accountType,
                 userSig:_res.userSig,
                 identifierNick: _res.identifierNick,
-                headurl: _res.headurl
+                portrait: _res.portrait
             }
             QWebIm.i().init(_res.avChatRoomId, _lInfo);
         }, { username:this.inputStr });
@@ -84,7 +84,8 @@ class Login extends ComponentBase {
         let _msg:IQWebImMsg = {
             sender: {
                 userId: QWebIm.i().loginInfo.identifier,
-                nickname: QWebIm.i().loginInfo.identifierNick
+                nickname: QWebIm.i().loginInfo.identifierNick,
+                portrait: QWebIm.i().loginInfo.portrait
             },
             action: QWebImType.ROOM_ENTER,
             content: {

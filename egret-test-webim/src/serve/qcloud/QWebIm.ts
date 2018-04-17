@@ -1,6 +1,9 @@
 /** 云通信webim
- *  class QWebImItem 接收数据
- *  interface IQWebImData发送数据
+ *  class QWebImMsg 消息结构
+ *  interface IQWebImMsg 消息结构
+ *  class QWebImType 消息类型
+ *  QWebImEvent 响应事件
+ *  interface IQwebImUser 用户数据
  *
  *  init 初始化QWebIm
  */
@@ -29,7 +32,7 @@ class QWebIm extends egret.EventDispatcher {
         "accountType": 0, //用户所属应用帐号类型，必填
         "userSig": "", //当前用户身份凭证，必须是字符串类型，必填
         "identifierNick": "", //当前用户昵称，不用填写，登录接口会返回用户的昵称，如果没有设置，则返回用户的id
-        "headurl": '' //当前用户默认头像，选填，如果设置过头像，则可以通过拉取个人资料接口来得到头像信息
+        "portrait": '' //当前用户默认头像，选填，如果设置过头像，则可以通过拉取个人资料接口来得到头像信息
     };
     //监听（多终端同步）群系统消息方法，方法都定义在demo_group_notice.js文件中
     //注意每个数字代表的含义，比如，
@@ -130,7 +133,7 @@ class QWebIm extends egret.EventDispatcher {
     }
     /** 退出大群 */
     public quitBigGroup() {
-        var options = {
+        let options = {
             'GroupId': this.avChatRoomId //群id
         };
         webim.quitBigGroup(
@@ -158,45 +161,6 @@ class QWebIm extends egret.EventDispatcher {
             }
         );
     }
-
-    /** 发送消息(普通消息)
-     *  sdfsdf
-     */
-    public onSendMsg(imMsg:IQWebImMsg, cbOk?, cbErr?) {
-        if (!this.loginInfo.identifier) { //未登录
-            if (this.accountMode == 0) { //独立模式
-                this.sdkLogin();
-            }
-            return;
-        }
-        if (!this.selSess) {
-            this.selSess = new webim.Session(this.selType, this.selToID, this.selToID, this.selSessHeadUrl, Math.round(new Date().getTime() / 1000));
-        }
-        let isSend = true; //是否为自己发送
-        let seq = -1; //消息序列，-1表示sdk自动生成，用于去重
-        let random = Math.round(Math.random() * 4294967296); //消息随机数，用于去重
-        let msgTime = Math.round(new Date().getTime() / 1000); //消息时间戳
-        let subType; //消息子类型
-        if (this.selType == webim.SESSION_TYPE.GROUP) {
-            subType = webim.GROUP_MSG_SUB_TYPE.COMMON;
-        } else {
-            subType = webim.C2C_MSG_SUB_TYPE.COMMON;
-        }
-        console.log("发送消息：", imMsg)
-        let msg = new webim.Msg(this.selSess, isSend, seq, random, msgTime, this.loginInfo.identifier, subType, this.loginInfo.identifierNick);
-
-        let customObj = new webim.Msg.Elem.Custom(JSON.stringify(imMsg), "", "");
-        msg.addCustom(customObj);
-        webim.sendMsg(msg, function (resp) {
-            console.log("发消息成功:", resp);
-            // webim.Log.info("发消息成功");
-            return cbOk && cbOk(resp);
-        }, function (err) {
-            console.log("发消息失败:", err);
-            // webim.Log.error("发消息失败:" + err.ErrorInfo);
-            return cbErr && cbErr(err);
-        });
-    }
 /** 登录 end **********************************************************************************/
 
 
@@ -211,7 +175,7 @@ class QWebIm extends egret.EventDispatcher {
     }
     //监听新消息(私聊(包括普通消息、全员推送消息)，普通群(非直播聊天室)消息)事件
     public onMsgNotify(newMsgList) {
-        console.log("onMsgNotify:", newMsgList);
+        // console.log("onMsgNotify:", newMsgList);
         let newMsg;
         for (let j in newMsgList) { //遍历新消息
             newMsg = newMsgList[j];
@@ -280,6 +244,122 @@ class QWebIm extends egret.EventDispatcher {
 /** 接收信息 end ****************************************************************************/
 
 
+/** 功能 start **********************************************************************************/
+    /** 发送消息(普通消息)
+     *  sdfsdf
+     */
+    public onSendMsg(imMsg:IQWebImMsg, cbOk?, cbErr?) {
+        if (!this.loginInfo.identifier) { //未登录
+            if (this.accountMode == 0) { //独立模式
+                this.sdkLogin();
+            }
+            return;
+        }
+        if (!this.selSess) {
+            this.selSess = new webim.Session(this.selType, this.selToID, this.selToID, this.selSessHeadUrl, Math.round(new Date().getTime() / 1000));
+        }
+        let isSend = true; //是否为自己发送
+        let seq = -1; //消息序列，-1表示sdk自动生成，用于去重
+        let random = Math.round(Math.random() * 4294967296); //消息随机数，用于去重
+        let msgTime = Math.round(new Date().getTime() / 1000); //消息时间戳
+        let subType; //消息子类型
+        if (this.selType == webim.SESSION_TYPE.GROUP) {
+            subType = webim.GROUP_MSG_SUB_TYPE.COMMON;
+        } else {
+            subType = webim.C2C_MSG_SUB_TYPE.COMMON;
+        }
+        console.log("发送消息：", imMsg)
+        let msg = new webim.Msg(this.selSess, isSend, seq, random, msgTime, this.loginInfo.identifier, subType, this.loginInfo.identifierNick);
+
+        let customObj = new webim.Msg.Elem.Custom(JSON.stringify(imMsg), "", "");
+        msg.addCustom(customObj);
+        webim.sendMsg(msg, function (resp) {
+            console.log("发消息成功:", resp);
+            // webim.Log.info("发消息成功");
+            return cbOk && cbOk(resp);
+        }, function (err) {
+            console.log("发消息失败:", err);
+            // webim.Log.error("发消息失败:" + err.ErrorInfo);
+            return cbErr && cbErr(err);
+        });
+    }
+
+
+    public getGroupMemberPortrait():Promise<{}> {
+        return this.getAccountGroupMemberList().then(this.getProfilePortrait);
+    }
+    public getAccountGroupMemberList(): Promise<{}> {
+        let option = {
+            "GroupId": this.avChatRoomId,
+            "MemberInfoFilter": [
+                "Role",
+                "JoinTime",
+                "Member_Account",
+                "NameCard"
+            ]
+        }
+        return new Promise((resolve, reject) => {
+            webim.getGroupMemberInfo(option, (resp) => {
+                let _accountlist = [];
+                for (let i=0; i<resp["MemberList"].length; i++) {
+                    let _obj = resp["MemberList"][i];
+                    _accountlist.push(_obj["Member_Account"]);
+                }
+                resolve(_accountlist);
+            }, (err) => {
+                reject(err);
+            })
+        });
+    }
+
+    /**
+     * return IQWebImUser[]
+     */
+    public getProfilePortrait(_accountlist): Promise<{}> {
+        let tag_list = [
+            "Tag_Profile_IM_Nick",//昵称
+            "Tag_Profile_IM_Gender",//性别
+            "Tag_Profile_IM_Image"//头像
+        ];
+        let options = {
+            'To_Account': _accountlist,
+            'TagList': tag_list
+        };
+        return new Promise((resolve, reject) => {
+            webim.getProfilePortrait(options, (resp) => {
+                let _userlist:IQwebImUser[] = [];
+                let _list = resp["UserProfileItem"];
+                for (let i=0; i<_list.length; i++) {
+                    let _obj = _list[i];
+                    let _user:IQwebImUser = {
+                        userId: _obj["To_Account"]
+                    }
+                    for ( let key in _obj["ProfileItem"]) {
+                        switch (_obj["ProfileItem"][key].Tag) {
+                            case 'Tag_Profile_IM_Nick':
+                                _user.nickname = _obj["ProfileItem"][key].Value;
+                                break;
+                            case 'Tag_Profile_IM_Gender':
+                                _user.gender = _obj["ProfileItem"][key].Value;
+                                break;
+                            case 'Tag_Profile_IM_Image':
+                                _user.portrait = _obj["ProfileItem"][key].Value;
+                                break;
+                        }
+                    }
+                    _userlist.push(_user);
+                }
+                resolve(_userlist);
+            }, (err) => {
+                reject(err);
+            })
+        })
+    }
+
+
+/** 功能 end **********************************************************************************/
+
+
 /** 监听 start ************************************************************************************/
     //监听 解散群 系统消息
     public onDestoryGroupNotify(notify) {
@@ -322,7 +402,7 @@ class QWebIm extends egret.EventDispatcher {
  * 消息结构
  */
 class QWebImMsg implements IQWebImMsg {
-    public sender:IQwebImSender = {
+    public sender:IQwebImUser = {
             userId: "",
             nickname: "",
             gender: 0,
@@ -358,7 +438,7 @@ class QWebImMsg implements IQWebImMsg {
 
 
 interface IQWebImMsg {
-    sender:IQwebImSender;
+    sender:IQwebImUser;
     action: string;
     client?:string;
     roomId?:number;
@@ -370,7 +450,7 @@ interface IQWebImMsg {
  * 如果服务器发送的IM消息是以用户名义发送，那么sender就包含该用户的信息
  * 如果服务器发送的系统消息(没有用户触发），该结构也会存在，只是每个字段的值都为空。
  */
-interface IQwebImSender {
+interface IQwebImUser {
     userId?: string;             // 用户id
     nickname?: string;           // 用户名
     gender?: number;             // 性别 0:未知 1:男 2:女
@@ -418,6 +498,10 @@ class QWebImEvent extends egret.Event {
 
     /** 加入大群成功 */
     public static APPLYJOINBIGGROUPEVENT:string = "applyJoinBigGroupEvent";
+    /** 退出大群 */
+    public static QUITBIGGROUPEVENT:string = "quitBigGroupEvent";
+    /** 登出 */
+    public static LOGOUTEVENT:string = "logoutEvent";
 
     /** 群组系统消息 */
     public static SHOWGROUPSYSTEMMSGEVENT:string = "showGroupSystemMsgEvent";

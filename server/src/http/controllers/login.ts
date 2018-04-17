@@ -50,7 +50,7 @@ function qAccountImoport(_username:string): Promise<{}> {
                         "accountType": 25288,
                         "userSig":_usersig,
                         "identifierNick": reqBody.Nick,
-                        "headurl": '',
+                        "portrait": reqBody.FaceUrl,
                         "avChatRoomId": '@TGS#3FH43EFFF'
                         // "avChatRoomId": '@TGS#aQKTCFFFV'
                     }

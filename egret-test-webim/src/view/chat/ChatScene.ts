@@ -12,6 +12,7 @@ class ChatScene extends eui.Group {
         this.horizontalCenter = 0;
 
         this.addEventListener(egret.Event.ADDED_TO_STAGE, this.addStage, this);
+        QWebIm.i().addEventListener(QWebImEvent.APPLYJOINBIGGROUPEVENT, this.applyJoinBigGroup, this);
     }
     private addStage(e:egret.Event): void {
         this.init();
@@ -29,7 +30,11 @@ class ChatScene extends eui.Group {
     }
 
 
-
+    private applyJoinBigGroup(e:QWebImEvent): void {
+        QWebIm.i().getGroupMemberPortrait().then((resp) => {
+            console.log("QWebIm.i().getGroupMemberPortrait:", resp)
+        });
+    }
 
 
 
